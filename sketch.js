@@ -1,5 +1,6 @@
 // Bandera para ignorar victoria/derrota tras animación de cajas
 let ignorarVictoriaDerrota = false;
+let ignorarVictoriaDerrotaFrames = 0;
 let corazonFondo;
 let iniciobateriaImg;
 let audioMarchaDocente;
@@ -272,7 +273,7 @@ function draw() {
       // Si termina el audio o frames, avanzar automáticamente
       if (audioMarchaDocente.currentTime() >= duracion - 0.05 || animacionMarchaFrames >= totalFrames) {
         if (audioMarchaDocente.isPlaying()) audioMarchaDocente.stop();
-        carga = min(200, carga + 180);
+        // No sumar energía aquí, solo pasar a esperar Enter
         resultadoCajas = 'esperandoEnterBuena';
         animacionMarchaFrames = 0;
         loop();
@@ -346,7 +347,7 @@ function draw() {
       // Si termina el audio o frames, avanzar automáticamente
       if (audioAgotamiento.currentTime() >= duracion - 0.05 || animacionPapelesFrames >= totalFrames) {
         if (audioAgotamiento.isPlaying()) audioAgotamiento.stop();
-        carga = max(0, carga - 180);
+        // No restar energía aquí, solo pasar a esperar Enter
         resultadoCajas = 'esperandoEnterMala';
         animacionPapelesFrames = 0;
         loop();
@@ -505,6 +506,13 @@ function keyPressed() {
     bateriaColor = color(255, 0, 0); // Rojo
   }
 
+  // Control de ignorar victoria/derrota por frames
+  if (ignorarVictoriaDerrotaFrames > 0) {
+    ignorarVictoriaDerrotaFrames--;
+    ignorarVictoriaDerrota = true;
+  } else {
+    ignorarVictoriaDerrota = false;
+  }
   // Condición de victoria
   if (carga >= 200 && !ignorarVictoriaDerrota) {
     juegoGanado = true;
@@ -519,8 +527,6 @@ function keyPressed() {
     loop(); // Por si estaba parado por derrota
     return;
   }
-  // Si se debe ignorar la victoria/derrota, solo por un frame
-  if (ignorarVictoriaDerrota) ignorarVictoriaDerrota = false;
 
   // FÍSICA DEL PERSONAJE
   if (!explotando) {
@@ -923,6 +929,12 @@ function keyPressed() {
     eventoCajasActivo = false;
     cajaSeleccionada = 0;
     contadorObstaculos = 0;
+    carga = 100; // Fijar batería al 50% tras caja buena o mala
+    ignorarVictoriaDerrotaFrames = 30; // Ignora la condición de ganar/perder por 30 frames (~0.5s)
+    if (musicaFondo && !musicaFondo.isPlaying()) {
+      musicaFondo.setVolume(0.2);
+      musicaFondo.loop();
+    }
     loop();
     return;
   }
