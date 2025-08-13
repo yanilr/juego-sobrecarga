@@ -141,7 +141,7 @@ let animacionPapelesFrames = 0;
 let contadorObstaculos = 0;
 
 function setup() {
-  let canvas = createCanvas(700, 420); // Más pequeño para mejor visualización
+  let canvas = createCanvas(900, 550); // Tamaño original
   // Centrar el canvas en el contenedor si existe
   let contenedor = document.getElementById('juego-container');
   if (contenedor) {
