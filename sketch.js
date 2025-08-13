@@ -1,8 +1,12 @@
-// Prevenir scroll de la página con flechas mientras se juega
-window.addEventListener('keydown', function(e) {
+// Prevenir scroll de la página con flechas SOLO si el canvas está enfocado
+document.addEventListener('keydown', function(e) {
   const flechas = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
   if (flechas.includes(e.key)) {
-    e.preventDefault();
+    // Solo prevenir si el foco está en el canvas
+    const active = document.activeElement;
+    if (active && active.tagName === 'CANVAS') {
+      e.preventDefault();
+    }
   }
 }, false);
 // Bandera para ignorar victoria/derrota tras animación de cajas
@@ -137,7 +141,7 @@ let animacionPapelesFrames = 0;
 let contadorObstaculos = 0;
 
 function setup() {
-  let canvas = createCanvas(900, 550);
+  let canvas = createCanvas(700, 420); // Más pequeño para mejor visualización
   // Centrar el canvas en el contenedor si existe
   let contenedor = document.getElementById('juego-container');
   if (contenedor) {
