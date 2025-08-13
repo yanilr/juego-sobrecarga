@@ -448,7 +448,10 @@ function draw() {
   // Disparador del evento especial: tras 10 obstáculos
   if (!eventoCajasActivo && contadorObstaculos >= 10) {
     eventoCajasActivo = true;
+    resultadoCajas = null;
     cajaSeleccionada = 0;
+    animacionMarchaFrames = 0;
+    animacionPapelesFrames = 0;
     redraw();
     return;
   }
@@ -471,14 +474,14 @@ function keyPressed() {
     if (keyCode === ENTER || keyCode === 32) { // Enter o Espacio para elegir
       if (cajaSeleccionada === 0) {
         resultadoCajas = 'buena';
-        eventoCajasActivo = false;
         animacionMarchaFrames = 0;
+        // eventoCajasActivo permanece activo hasta que termine la animación y se presione Enter
         loop();
         return;
       } else if (cajaSeleccionada === 1) {
         resultadoCajas = 'mala';
-        eventoCajasActivo = false;
         animacionPapelesFrames = 0;
+        // eventoCajasActivo permanece activo hasta que termine la animación y se presione Enter
         loop();
         return;
       }
@@ -937,7 +940,7 @@ function keyPressed() {
     resultadoCajas = null;
     animacionMarchaFrames = 0;
     animacionPapelesFrames = 0;
-    eventoCajasActivo = false;
+    eventoCajasActivo = false; // Solo aquí se desactiva el evento
     cajaSeleccionada = 0;
     contadorObstaculos = 0;
     carga = 100; // Fijar batería al 50% tras caja buena o mala
