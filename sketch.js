@@ -1,3 +1,5 @@
+// Bandera para ignorar victoria/derrota tras animación de cajas
+let ignorarVictoriaDerrota = false;
 let corazonFondo;
 let iniciobateriaImg;
 let audioMarchaDocente;
@@ -475,20 +477,7 @@ function keyPressed() {
   if ((resultadoCajas === 'buena' || resultadoCajas === 'mala') && keyCode === ENTER) {
     if (resultadoCajas === 'buena' && audioMarchaDocente && audioMarchaDocente.isPlaying()) audioMarchaDocente.stop();
     if (resultadoCajas === 'mala' && audioAgotamiento && audioAgotamiento.isPlaying()) audioAgotamiento.stop();
-    if (resultadoCajas === 'buena') {
-      carga = min(200, carga + 180);
-      resultadoCajas = 'esperandoEnterBuena';
-    } else if (resultadoCajas === 'mala') {
-      carga = max(0, carga - 180);
-      resultadoCajas = 'esperandoEnterMala';
-    }
-    animacionMarchaFrames = 0;
-    animacionPapelesFrames = 0;
-    loop();
-    return;
-  }
-  // Al presionar Enter en espera tras animación, reanuda el juego normal y permite nuevo evento tras otros 10 obstáculos
-  if ((resultadoCajas === 'esperandoEnterBuena' || resultadoCajas === 'esperandoEnterMala') && keyCode === ENTER) {
+    // Al terminar la animación y presionar Enter, simplemente reanuda el juego normal
     resultadoCajas = null;
     animacionMarchaFrames = 0;
     animacionPapelesFrames = 0;
@@ -517,7 +506,7 @@ function keyPressed() {
   }
 
   // Condición de victoria
-  if (carga >= 200) {
+  if (carga >= 200 && !ignorarVictoriaDerrota) {
     juegoGanado = true;
     if (sonidoGanaste && !sonidoGanaste.isPlaying()) sonidoGanaste.play();
     if (corazonFondo && !corazonFondo.isPlaying()) {
@@ -530,6 +519,8 @@ function keyPressed() {
     loop(); // Por si estaba parado por derrota
     return;
   }
+  // Si se debe ignorar la victoria/derrota, solo por un frame
+  if (ignorarVictoriaDerrota) ignorarVictoriaDerrota = false;
 
   // FÍSICA DEL PERSONAJE
   if (!explotando) {
@@ -627,7 +618,7 @@ function keyPressed() {
       burbujaFramesNeg--;
       if (burbujaFramesNeg === 0) burbujaTextoNeg = null;
     }
-  } else if (carga <= 0 || explotando) {
+  } else if ((carga <= 0 && !ignorarVictoriaDerrota) || explotando) {
     if (!explotando) {
       crearExplosion(personajeX + personajeW / 2, personajeY + personajeH / 2);
       explotando = true;
@@ -700,6 +691,8 @@ function keyPressed() {
       if (obs.x < -40) {
         contadorObstaculos++;
         obstaculos.splice(i, 1);
+        // Si se estaba ignorando la victoria/derrota, ahora se reactiva
+        if (ignorarVictoriaDerrota) ignorarVictoriaDerrota = false;
         continue;
       }
     }
@@ -733,6 +726,8 @@ function keyPressed() {
     }
     if (colisiona) {
       contadorObstaculos++;
+      // Si se estaba ignorando la victoria/derrota, ahora se reactiva
+      if (ignorarVictoriaDerrota) ignorarVictoriaDerrota = false;
       obs.animando = true;
       obs.animFrame = 0;
       obs.startX = obs.x;
@@ -868,9 +863,13 @@ function crearExplosion(x, y) {
   }
 }
 
+
+// Unificación y corrección de keyPressed
 function keyPressed() {
   // --- Evento especial de cajas ---
   if (eventoCajasActivo) {
+    // Bloqueo absoluto: si ya se eligió una caja, no permite ninguna acción hasta reiniciar
+    if (resultadoCajas) return;
     if (keyCode === LEFT_ARROW) {
       cajaSeleccionada = 0;
       redraw();
@@ -896,6 +895,35 @@ function keyPressed() {
         return;
       }
     }
+    return;
+  }
+  // Permitir saltar animación de caja buena o mala con Enter
+  if ((resultadoCajas === 'buena' || resultadoCajas === 'mala') && keyCode === ENTER) {
+    if (resultadoCajas === 'buena' && audioMarchaDocente && audioMarchaDocente.isPlaying()) audioMarchaDocente.stop();
+    if (resultadoCajas === 'mala' && audioAgotamiento && audioAgotamiento.isPlaying()) audioAgotamiento.stop();
+    if (resultadoCajas === 'buena') {
+  // Sumar energía pero nunca llegar a la victoria tras la animación de caja buena
+  carga = min(199, carga + 180);
+      resultadoCajas = 'esperandoEnterBuena';
+    } else if (resultadoCajas === 'mala') {
+  // Restar energía pero nunca llegar a la derrota tras la animación de caja mala
+  carga = max(1, carga - 180);
+      resultadoCajas = 'esperandoEnterMala';
+    }
+    animacionMarchaFrames = 0;
+    animacionPapelesFrames = 0;
+    loop();
+    return;
+  }
+  // Al presionar Enter en espera tras animación, reanuda el juego normal y permite nuevo evento tras otros 10 obstáculos
+  if ((resultadoCajas === 'esperandoEnterBuena' || resultadoCajas === 'esperandoEnterMala') && keyCode === ENTER) {
+    resultadoCajas = null;
+    animacionMarchaFrames = 0;
+    animacionPapelesFrames = 0;
+    eventoCajasActivo = false;
+    cajaSeleccionada = 0;
+    contadorObstaculos = 0;
+    loop();
     return;
   }
   if (!juegoIniciado) {
@@ -942,8 +970,8 @@ function keyPressed() {
   if (keyCode === DOWN_ARROW) {
     personajeY = min(height - personajeH - 20, personajeY + 20);
   }
-  // Reiniciar juego con Enter
-  if (keyCode === ENTER) {
+  // Reiniciar juego con Enter (cuando el juego está perdido o ganado)
+  if (keyCode === ENTER && (carga <= 0 || explotando || juegoGanado)) {
     // Restaurar variables principales
     fondoX = 0;
     carga = 100;
@@ -978,6 +1006,7 @@ function keyPressed() {
       musicaFondo.setVolume(0.2);
       musicaFondo.loop();
     }
+    return;
   }
 }
 
