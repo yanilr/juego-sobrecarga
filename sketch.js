@@ -384,24 +384,31 @@ function draw() {
   }
   if (!juegoIniciado) {
     background(0, 120, 200);
+    // Título principal
     textAlign(CENTER, CENTER);
     textSize(48);
     fill(255);
     stroke(0);
     strokeWeight(6);
-    text('¡Que comience el ciclo lectivo!', width/2, height/2 - 60);
-    // Imagen de inicio centrada debajo del texto principal
+    text('¡Que comience el ciclo lectivo!', width/2, height * 0.18);
+    // Imagen de inicio centrada y más pequeña si la ventana es chica
     if (iniciobateriaImg) {
-      let w = 220;
-      let h = 220;
-      image(iniciobateriaImg, width/2 - w/2, height/2 - 30, w, h);
+      let maxImgW = min(320, width * 0.48); // Más grande
+      let maxImgH = min(320, height * 0.48);
+      let w = maxImgW;
+      let h = maxImgH;
+      image(iniciobateriaImg, width/2 - w/2, height * 0.28, w, h);
     }
-    // Mensaje al pie
-    textSize(28);
+    // Mensaje de inicio, más separado y legible
+    textSize(30);
     noStroke();
     fill(255);
-    textAlign(CENTER, BOTTOM);
-    text('Presiona una tecla para comenzar', width/2, height - 30);
+    textAlign(CENTER, CENTER);
+  text('Presiona una tecla para comenzar', width/2, height * 0.82);
+    // Pie de página con créditos o instrucciones extra (opcional)
+    // textSize(18);
+    // fill(220);
+    // text('Hecho por ...', width/2, height - 18);
     return;
   }
   if (juegoGanado) {
