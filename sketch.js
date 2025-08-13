@@ -1,3 +1,10 @@
+// Prevenir scroll de la página con flechas mientras se juega
+window.addEventListener('keydown', function(e) {
+  const flechas = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+  if (flechas.includes(e.key)) {
+    e.preventDefault();
+  }
+}, false);
 // Bandera para ignorar victoria/derrota tras animación de cajas
 let ignorarVictoriaDerrota = false;
 let ignorarVictoriaDerrotaFrames = 0;
