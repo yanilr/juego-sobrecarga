@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <!-- Fuente pixelada para estilo videojuego -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sketch</title>
+
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <script src="libraries/p5.min.js"></script>
+    <script src="libraries/p5.sound.min.js"></script>
+  </head>
+
+  <body>
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100vw;">
+      <div id="juego-container" style="margin-bottom: 0;"></div>
+      <div id="info-juego" style="width:900px;max-width:900px;margin:32px auto 0 auto;text-align:center;">
+        <div style="display:flex;align-items:center;justify-content:center;gap:18px;width:100%;margin-bottom:18px;">
+          <img src="libraries/bateria%20maestra%20(1).png" alt="Maestra Batería" style="width:70px;height:auto;image-rendering:pixelated;filter:drop-shadow(0 2px 2px #0006);" />
+          <div style="background:rgba(255,255,255,0.95);border:4px solid #222;border-radius:18px;padding:22px 32px 16px 32px;box-shadow:0 0 0 6px #0002,0 4px 24px 2px #0003;display:inline-block;text-align:center;position:relative;min-width:220px;max-width:420px;">
+            <h1 style="font-family:'Press Start 2P', monospace;font-size:1.3em;margin:0;letter-spacing:1px;color:#222;">Sobrecarga</h1>
+            <div style="position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:24px solid transparent;border-right:24px solid transparent;border-top:24px solid #fff;border-top-color:rgba(255,255,255,0.95);filter:drop-shadow(0 2px 2px #0002);"></div>
+            <div style="position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:28px solid transparent;border-right:28px solid transparent;border-top:28px solid #222;z-index:-1;"></div>
+          </div>
+          <img src="libraries/bateria%20maestra%20(1).png" alt="Maestra Batería" style="width:70px;height:auto;image-rendering:pixelated;filter:drop-shadow(0 2px 2px #0006);" />
+        </div>
+        <p style="font-family:'Press Start 2P', monospace;font-size:1.05em;line-height:1.7;margin-bottom:0.7em;letter-spacing:0.5px;word-break:break-word;white-space:pre-line;color:#222;width:100%;text-align:center;padding:0 32px;">
+          En este juego, el personaje "Maestra Batería" avanza por los pasillos de la escuela mientras su energía se ve afectada por tareas, palabras y exigencias que la cargan o descargan. Trabajando la metáfora del cuerpo docente como batería que, entre demandas y falta de recursos, se sobrecalienta y apaga. Una experiencia para sentir, más que para explicar, el peso del cansancio laboral.
+          
+          Cuando la batería se apaga, las voces se encienden.
+          
+          <b>Compartí en los comentarios qué te hizo sentir Sobrecarga.</b> Tu experiencia y tu mirada también cuentan.
+        </p>
+      </div>
+      <div id="giscus-comments" style="min-width:350px;max-width:400px;margin:0 auto;"></div>
+    </div>
+    <script src="sketch.js"></script>
+    <script src="https://giscus.app/client.js"
+        data-repo="Yanilr/Sobrecarga-Juego"
+        data-repo-id="R_kgDOPZCkXw"
+        data-category="General"
+        data-category-id="DIC_kwDOPZCkX84Ct07J"
+        data-mapping="url"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="catppuccin_latte"
+        data-lang="es"
+        crossorigin="anonymous"
+        async>
+    </script>
+
+  </body>
+</html>
